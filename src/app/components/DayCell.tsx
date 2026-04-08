@@ -5,8 +5,9 @@ type DayCellVariant = 'default' | 'hovered' | 'today' | 'start' | 'inRange' | 'e
 interface DayCellProps {
   day: number;
   variant?: DayCellVariant;
-  rangePosition?: number; // 0 to 1, for gradient calculation
+  rangePosition?: number;
   hasNote?: boolean;
+  isHoliday?: boolean;
   isOtherMonth?: boolean;
   onClick?: () => void;
   onMouseEnter?: () => void;
@@ -19,6 +20,7 @@ export function DayCell({
   variant = 'default',
   rangePosition = 0,
   hasNote = false,
+  isHoliday = false,
   isOtherMonth = false,
   onClick,
   onMouseEnter,
@@ -27,14 +29,11 @@ export function DayCell({
 }: DayCellProps) {
   const size = isMobile ? 36 : 40;
 
-  // marking the color changes from start(green) ---- end(red) (logic got from ai)
   const getInRangeColor = (position: number) => {
     if (position <= 0.5) {
-      // Green to Yellow
       const t = position * 2;
       return `rgb(${34 + (234 - 34) * t}, ${197 + (179 - 197) * t}, ${94 + (8 - 94) * t})`;
     } else {
-      // Yellow to Red
       const t = (position - 0.5) * 2;
       return `rgb(${234 + (239 - 234) * t}, ${179 + (68 - 179) * t}, ${8 + (68 - 8) * t})`;
     }
@@ -47,8 +46,17 @@ export function DayCell({
     let border = 'none';
     let opacity = 1;
 
-    if (isOtherMonth) {
-      opacity = 0.4;
+    if (isOtherMonth) opacity = 0.4;
+
+    // Holiday overrides everything except otherMonth
+    if (isHoliday && !isOtherMonth) {
+      return {
+        backgroundColor: '#EF4444',
+        color: 'white',
+        fontWeight: '600',
+        border: 'none',
+        opacity: 1,
+      };
     }
 
     switch (variant) {
@@ -88,10 +96,11 @@ export function DayCell({
         height: `${size}px`,
         ...styles,
       }}
-      whileHover={variant !== 'inRange' && variant !== 'start' && variant !== 'end' ? {
-        scale: 1.08,
-        backgroundColor: variant === 'today' ? 'rgba(99, 102, 241, 0.12)' : 'rgba(99, 102, 241, 0.12)',
-      } : undefined}
+      whileHover={
+        variant !== 'inRange' && variant !== 'start' && variant !== 'end' && !isHoliday
+          ? { scale: 1.08, backgroundColor: 'rgba(99, 102, 241, 0.12)' }
+          : undefined
+      }
       transition={{ duration: 0.15 }}
     >
       {day}

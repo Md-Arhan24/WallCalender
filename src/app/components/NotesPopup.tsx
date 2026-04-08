@@ -5,22 +5,32 @@ import { useState } from 'react';
 interface NotesPopupProps {
   date: Date | null;
   note: string;
+  isHoliday: boolean;
+  onToggleHoliday: () => void;
   onSave: (note: string) => void;
   onClose: () => void;
   isDark: boolean;
   isMobile?: boolean;
 }
 
-export function NotesPopup({ date, note, onSave, onClose, isDark, isMobile = false }: NotesPopupProps) {
+export function NotesPopup({
+  date,
+  note,
+  isHoliday,
+  onToggleHoliday,
+  onSave,
+  onClose,
+  isDark,
+  isMobile = false,
+}: NotesPopupProps) {
   const [currentNote, setCurrentNote] = useState(note);
 
-  //click else where , dont pop up any thing
   if (!date) return null;
 
-  const formattedDate = date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric', 
-    year: 'numeric' 
+  const formattedDate = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   const handleSave = () => {
@@ -43,20 +53,20 @@ export function NotesPopup({ date, note, onSave, onClose, isDark, isMobile = fal
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b" style={{
-          borderColor: isDark ? '#2A2A2A' : '#E5E7EB',
-        }}>
-          <span className="text-sm font-medium" style={{
-            color: isDark ? '#F0F0F0' : '#1A1A1A',
-          }}>
+        <div
+          className="flex items-center justify-between p-4 border-b"
+          style={{ borderColor: isDark ? '#2A2A2A' : '#E5E7EB' }}
+        >
+          <span
+            className="text-sm font-medium"
+            style={{ color: isDark ? '#F0F0F0' : '#1A1A1A' }}
+          >
             {formattedDate}
           </span>
           <button
             onClick={onClose}
             className="hover:opacity-70 transition-opacity"
-            style={{
-              color: isDark ? '#9CA3AF' : '#6B7280',
-            }}
+            style={{ color: isDark ? '#9CA3AF' : '#6B7280' }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -80,21 +90,27 @@ export function NotesPopup({ date, note, onSave, onClose, isDark, isMobile = fal
           />
         </div>
 
-        {/* Save Button */}
-        <div className="p-4 pt-0">
+        {/* Buttons */}
+        <div className="p-4 pt-0 flex flex-col gap-2">
+          <button
+            onClick={onToggleHoliday}
+            className="w-full rounded-lg font-medium text-sm transition-colors cursor-pointer"
+            style={{
+              backgroundColor: isHoliday ? (isDark ? '#2A2A2A' : '#F3F4F6') : '#EF4444',
+              color: isHoliday ? (isDark ? '#F0F0F0' : '#1A1A1A') : '#FFFFFF',
+              height: '32px',
+              border: isHoliday ? `1px solid ${isDark ? '#3A3A3A' : '#E5E7EB'}` : 'none',
+            }}
+          >
+            {isHoliday ? 'Unmark Holiday' : 'Mark as Holiday'}
+          </button>
+
           <button
             onClick={handleSave}
-            className="w-full rounded-lg text-white font-medium text-sm transition-colors"
-            style={{
-              backgroundColor: '#22C55E',
-              height: '32px',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#16A34A';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#22C55E';
-            }}
+            className="w-full rounded-lg text-white font-medium text-sm transition-colors cursor-pointer"
+            style={{ backgroundColor: '#22C55E', height: '32px' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#16A34A'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#22C55E'; }}
           >
             Save Note
           </button>

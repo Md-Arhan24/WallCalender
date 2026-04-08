@@ -1,4 +1,4 @@
-#  Wall Calender
+#  Wall Calender --- update readme
  
 > A polished, interactive wall calendar component built with React and TypeScript that lets users visually track date ranges through gradient shading and color intensity.
 > Inspired by the aesthetic of a physical wall calendar — featuring a prominent image anchor, clean date grid, and an integrated notes section.
