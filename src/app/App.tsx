@@ -25,7 +25,7 @@ export default function App() {
 
   const [quote, setQuote] = useState(() => {
     const saved = localStorage.getItem('quote');
-    return saved || 'The days are long, but the years are short. Make each moment count.';
+    return saved || 'Practice , Practice and Pratice makes you perfect.';
   });
 
   const [heroImage, setHeroImage] = useState('/tuf.jpg');
